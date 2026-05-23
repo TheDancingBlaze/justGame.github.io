@@ -196,14 +196,11 @@ function preloadAllImages() {
 function autoFitText(element, maxSize = CONFIG.TEXT_FIT.CARD_MAX, minSize = CONFIG.TEXT_FIT.CARD_MIN) {
     if (!element) return;
     
-    // 🔧 Высота НЕ фиксированная — берётся из CSS (flex: 0 0 auto)
+    // 🔧 ФИКСИРОВАННАЯ высота — карточка не меняет размер от длины текста
+    element.style.height = '180px';
     element.style.overflow = 'hidden';
     
-    // 🔧 Адаптивный максимум: зависит от ширины карточки
-    const cardWidth = element.closest('.card-stack')?.offsetWidth || 320;
-    const adaptiveMax = Math.min(maxSize, Math.max(14, cardWidth / 20));
-    
-    let currentSize = adaptiveMax;
+    let currentSize = maxSize;
     element.style.fontSize = currentSize + 'px';
     
     while (
@@ -508,28 +505,41 @@ function handleDragMove(e) {
     const currentX = getEventX(e);
     let moveX = currentX - gameState.startX;
     
-    // 🔧 АДАПТИВНЫЙ МАКСИМУМ: зависит от ширины экрана
-    const screenWidth = window.innerWidth;
-    const cardWidth = DOM.card ? DOM.card.offsetWidth : 320;
-    // Карточка не должна вылетать больше чем на (ширина экрана - ширина карты) / 2 + запас
-    const adaptiveMax = Math.min(
-        CONFIG.CARD.MAX_DRAG_DISTANCE,
-        (screenWidth - cardWidth) / 2 + 20
-    );
+    if (!DOM.card) return;
     
-    // Ограничиваем максимальное смещение
+    // 🔧 РАСЧЁТ МАКСИМУМА: угол карточки не должен выходить за экран
+    const screenWidth = window.innerWidth;
+    const cardWidth = DOM.card.offsetWidth;
+    const cardHeight = DOM.card.offsetHeight;
+    
+    // Запас от края экрана (≈0.5 см = 19px)
+    const EDGE_PADDING = 20;
+    
+    // Пробуем текущее смещение, считаем угол
+    let testMove = moveX;
+    if (testMove > CONFIG.CARD.MAX_DRAG_DISTANCE) testMove = CONFIG.CARD.MAX_DRAG_DISTANCE;
+    if (testMove < -CONFIG.CARD.MAX_DRAG_DISTANCE) testMove = -CONFIG.CARD.MAX_DRAG_DISTANCE;
+    
+    const testRotation = testMove / CONFIG.CARD.ROTATION_FACTOR;
+    const rotationRad = Math.abs(testRotation) * Math.PI / 180;
+    
+    // 🔧 На сколько пикселей угол "вылетает" по горизонтали из-за поворота
+    const cornerOverflow = Math.sin(rotationRad) * cardHeight / 2;
+    
+    // Максимальное смещение, при котором верхний угол ещё в кадре
+    const maxSafeMove = (screenWidth - cardWidth) / 2 - cornerOverflow - EDGE_PADDING;
+    
+    // Применяем ограничение (берём меньшее из двух)
+    const adaptiveMax = Math.min(CONFIG.CARD.MAX_DRAG_DISTANCE, Math.max(60, maxSafeMove));
+    
     if (moveX > adaptiveMax) moveX = adaptiveMax;
     if (moveX < -adaptiveMax) moveX = -adaptiveMax;
     
-    // 🔧 УМЕНЬШЕННЫЙ УГОЛ ПОВОРОТА (было /15, стало /25)
-    // Чем меньше делитель — тем сильнее поворот. 25 = мягкий наклон
-    const rotation = moveX / 25;
+    const rotation = moveX / CONFIG.CARD.ROTATION_FACTOR;
     
-    if (DOM.card) {
-        DOM.card.style.transform = `translateX(${moveX}px) rotate(${rotation}deg)`;
-    }
+    DOM.card.style.transform = `translateX(${moveX}px) rotate(${rotation}deg)`;
     
-    // Показываем плашки выбора в зависимости от направления
+    // Показываем плашки выбора
     if (moveX > 20) {
         if (DOM.rightLabel) DOM.rightLabel.style.opacity = Math.min(moveX / 100, 1);
         if (DOM.leftLabel) DOM.leftLabel.style.opacity = 0;
@@ -600,7 +610,7 @@ function handleDragEnd(e) {
         // Анимация улетающей карточки
         DOM.card.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
         const flyDistance = Math.max(600, window.innerWidth);
-        DOM.card.style.transform = `translateX(${direction * flyDistance}px) rotate(${direction * 45}deg)`;
+        DOM.card.style.transform = `translateX(${direction * 600}px) rotate(${direction * 60}deg)`;
         DOM.card.style.opacity = '0';
         setTimeout(resetCard, CONFIG.CARD.ANIMATION_DURATION);
     } else if (DOM.card) {
