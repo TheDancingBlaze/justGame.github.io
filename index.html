@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Архив 1831 — Интерактивная историческая реконструкция</title>
+    
+    <!-- Подключение шрифтов, используемых в CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+SC:wght@400;500;600;700&family=Playfair+Display:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English+SC&family=Inter:wght@300;400;500;600;700&display=swap">
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== СТАРТОВОЕ МЕНЮ ========== -->
+    <div id="start-screen">
+        <!-- Контейнер для анимированных частиц (генерируются через JS) -->
+        <div id="particles" class="particles"></div>
+        
+        <div class="menu-frame">
+            <!-- Декоративные уголки рамки -->
+            <div class="corner-decor cd-tl"></div>
+            <div class="corner-decor cd-tr"></div>
+            <div class="corner-decor cd-bl"></div>
+            <div class="corner-decor cd-br"></div>
+            
+            <div class="content">
+                <h1 class="title">Архив 1831</h1>
+                <p class="tagline">«История не терпит ошибок. Сохрани её ход.»</p>
+                
+                <!-- Анимированная свеча -->
+                <div class="candle-container">
+                    <div class="candle">
+                        <div class="candle-flame"></div>
+                    </div>
+                </div>
+                
+                <!-- Кнопки меню -->
+                <button id="play-btn" class="btn">Приступить к правлению</button>
+                <button id="about-btn" class="btn">О игре</button>
+                
+                <!-- Блок с эффектом печатной машинки -->
+                <div class="typewriter-block">
+                    <div id="typewriter" class="typewriter-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ДИСКЛЕЙМЕР ========== -->
+    <div id="disclaimer-screen" class="disclaimer-screen" style="display: none; visibility: hidden; opacity: 0;">
+        <div class="disclaimer-box">
+            <div class="corner-bl"></div>
+            <div class="corner-br"></div>
+            
+            <h2>⚔️ ДИСКЛЕЙМЕР ⚔️</h2>
+            <p>Данный проект является интерактивной исторической реконструкцией и носит исключительно образовательный характер.</p>
+            <p>Разработчики не претендуют на абсолютную академическую точность каждой игровой ситуации. Сценарий и баланс игры созданы на основе синтеза воспоминаний современников, мемуаров и общедоступных исторических документов Третьего отделения.</p>
+            <p>Визуальный стиль, дизайн и образы персонажей являются авторской интерпретацией создателей проекта.</p>
+            <p>Мы стремились передать общую атмосферу и драматизм эпохи 1830-х годов, не преследуя цель оскорбить память исторических деятелей или исказить их реальный вклад в историю Российской империи.</p>
+            
+            <hr>
+            
+            <div id="continue-btn" class="click-to-continue">
+                ✦ НАЖМИТЕ В ЛЮБОМ МЕСТЕ, ЧТОБЫ ПРОДОЛЖИТЬ ✦
+            </div>
+        </div>
+    </div>
+
+        <!-- ========== ОСНОВНОЙ ИНТЕРФЕЙС ИГРЫ ========== -->
+    <div class="main-layout main-content-hidden">
+        
+        <!-- Таймлайн (не используется) -->
+        <!--
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div id="timeline-marker" class="timeline-marker">
+                <div class="marker-ball"></div>
+            </div>
+            <div id="timeline-labels" class="timeline-labels"></div>
+        </div>
+        -->
+
+        <!-- Игровая зона -->
+        <div class="game-container">
+            
+            <!-- Реплика НАД карточкой -->
+            <div class="card-text">Загрузка истории...</div>
+            
+            <div class="card-stack">
+                <div class="card-back"></div>
+                
+                <div id="game-card" class="card">
+                    <div class="card-image">
+                        <img src="" alt="Историческое событие" draggable="false">
+                    </div>
+                    
+                    <!-- Плашки выбора (появляются при свайпе) -->
+                    <div id="choice-left" class="choice-label"></div>
+                    <div id="choice-right" class="choice-label"></div>
+                    
+                    <!-- Имя персонажа ВНУТРИ карточки (внизу) -->
+                    <div class="character-name"></div>
+                </div>
+            </div>
+            
+            <!-- Дата под карточкой -->
+            <div id="card-date-below" class="card-date-below"></div>
+            
+            <!-- Скрытая строка статов -->
+            <div id="stats-line" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- ========== МУЗЫКАЛЬНЫЙ ПЛЕЕР ========== -->
+    <div class="music-player">
+        <div id="player-icon" class="player-icon">
+            <span class="music-note">♪</span>
+        </div>
+        
+        <div id="player-panel" class="player-panel" style="display: none;">
+            <div class="player-panel-title">МУЗЫКА</div>
+            <div class="track-row">
+                <button id="prev-track" class="track-arrow">◀</button>
+                <span id="track-name" class="track-name">Загрузка...</span>
+                <button id="next-track" class="track-arrow">▶</button>
+            </div>
+            <div class="volume-control">
+                <span class="volume-icon">🔊</span>
+                <input type="range" id="volume-slider" min="0" max="100" value="30">
+                <span id="volume-value">30%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== КНОПКА ПРАВИЛ ========== -->
+    <div id="rules-btn" class="rules-icon">
+        <span class="rules-symbol">📜</span>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО: ПРАВИЛА ИГРЫ ========== -->
+    <div id="rules-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-rules" class="modal-close">×</button>
+            <h2 class="modal-title">ПРАВИЛА ИГРЫ</h2>
+            <div class="modal-body">
+                <p>Во время игры вы будете получать донесения от советников. Обращайте внимание на цвет рамки карточки — он подскажет, насколько важен момент.</p>
+                <ul class="rules-list">
+                    <li><span class="rule-blue">🔵 Синяя рамка</span> — обычное донесение. Выбор повлияет на ресурсы и отношения, но не приведёт к немедленной катастрофе.</li>
+                    <li><span class="rule-orange">🟠 Оранжевая рамка</span> — спор. Два персонажа дают противоположные советы. Вы должны выбрать, чью сторону принять. Отказ или нейтралитет невозможен.</li>
+                    <li><span class="rule-red">🔴 Красная рамка</span> — фатальное решение. Таких карточек всего шесть. Ошибка здесь может стоить вам должности, репутации или жизни. Думайте тщательно.</li>
+                    <li><span class="rule-gold">🟡 Золотая рамка</span> — Информация для игрока, выбора нет.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== МОДАЛЬНОЕ ОКНО: ОБ ИГРЕ ========== -->
+    <div id="about-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-about" class="modal-close">×</button>
+            <h2 class="modal-title">📜 АРХИВ 1831</h2>
+            <div class="modal-body">
+                <p>«Архив 1831» — это нарративная карточная стратегия и интерактивный исторический симулятор, в котором вам предстоит управлять охваченным смертельной эпидемией Санкт-Петербургом. Игра создана на стыке истории и геймдева как студенческий творческий проект, полностью опирающийся на реальные архивные данные.</p>
+                
+                <h3>🎭 Сюжет: Симуляция</h3>
+                <p>Вы — студент-историк, чьё сознание интегрировано в симуляцию прошлого. Ваша задача — прожить лето 1831 года в теле доверенного лица Императора Николая I.</p>
+                <p>Ваша цель — не изобрести антибиотики, не стать героем и не спасти всех. Ваша миссия — сохранить ткань истории и удержать Империю от падения. Но есть проблема: люди прислушиваются к вам. Врачи, купцы, жандармы и чернь ждут ваших указаний. Сможете ли вы удержать баланс между паникой, экономикой и наукой? Или попытаетесь изменить прошлое, тем самым пустив локомотив времени под откос?</p>
+                
+                <h3>⚖️ Геймплей: Цена одного решения</h3>
+                <p>Механика вдохновлена хитами Reigns и Lapse. Вам предстоит пройти через 51 карточку с подлинными историческими дилеммами.</p>
+                <ul>
+                    <li><strong>Скрытые параметры:</strong> В игре нет видимых шкал. Три ключевых показателя незримо реагируют на ваши решения. Вы не видите цифр — вы должны полагаться на интуицию, эмпатию и знание эпохи.</li>
+                    <li><strong>Никаких простых ответов:</strong> Закрыть тракты и убить торговлю или впустить чуму? Запретить крестные ходы или позволить толпе собраться в храмах?</li>
+                    <li><strong>Фатальные ошибки:</strong> Неверный шаг ведет к Bad End — холерному бунту на Сенной площади, краху медицины или гневу Императора.</li>
+                </ul>
+                
+                <h3>📜 100% Историческая достоверность</h3>
+                <p>Сценарий игры полностью основан на документальной книге Д. Ю. Шериха «Агонизирующая столица». Мы не выдумывали ужасы — мы взяли их из мемуаров современников. Вам предстоит столкнуться с реалиями, которые звучат абсурднее любого хоррора.</p>
+                
+                <h3>🌫️ Атмосфера</h3>
+                <p>Холера — это неприятно. Игра не романтизирует прошлое. Вас ждет мрачная, напряженная атмосфера агонизирующего города, где труповозки стучат колесами по ночным мостовым, а невежество убивает быстрее болезни.</p>
+                
+                <h3>🔧 О проекте</h3>
+                <p>«Архив 1831» — это эксперимент по геймификации образования, созданный в стенах университета. Сценарий базируется на архивных материалах, а логика ветвления разработана в коллаборации человека и ИИ для адаптации исторических текстов в формат интерактивных дилемм. Игра работает прямо в браузере на любом устройстве.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ЭКРАН ОКОНЧАНИЯ ИГРЫ (Генерируется JS) ========== -->
+    <div id="game-over-screen">
+        <div class="game-over-box">
+            <!-- Контент подставляется динамически из script.js (showBadEnd / showFinalVerdict) -->
+        </div>
+    </div>
+
+    <!-- ========== АУДИО ЭЛЕМЕНТЫ ========== -->
+    <audio id="bg-music" loop></audio>
+    <!-- Укажите путь к файлу сердцебиения, если он отличается -->
+    <audio id="heartbeat-sound" src="music/heartbeat.mp3" loop></audio> 
+
+    <!-- ========== СКРИПТЫ ========== -->
+    <!-- Файл с массивом questions должен быть подключен до основного скрипта -->
+    <script src="cards2.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
