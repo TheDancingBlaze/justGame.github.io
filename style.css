@@ -594,16 +594,16 @@ body {
     position: relative;
 }
 
-/* Стопка карт — С СОХРАНЕНИЕМ ПРОПОРЦИЙ 2:3 */
+/* Стопка карт — СОХРАНЕНИЕ ПРОПОРЦИЙ + дата не вылетает */
 .card-stack {
     position: relative;
     width: 320px;
-    aspect-ratio: 2 / 3;  /* 🔧 ЖЁСТКОЕ СООТНОШЕНИЕ 2:3 */
+    aspect-ratio: 2 / 3;           /* 🔧 Всегда 2:3 */
+    max-height: 62vh;              /* 🔧 Не выше 62% экрана — дата влезает */
+    max-width: calc(62vh * 2 / 3); /* 🔧 Ширина подстраивается под высоту */
     margin: 0 auto;
     touch-action: none;
     -webkit-touch-callout: none;
-    max-width: 88vw;      /* 🔧 Не шире 88% экрана */
-    max-height: 68vh;     /* 🔧 Не выше 68% экрана */
 }
 
 /* 🔧 Автоматически пересчитываем: если высота лимитирует — ширина подстроится */
@@ -672,14 +672,12 @@ body {
     transition: opacity 0.2s ease;
 }
 
-/* Текст на карточке — АДАПТИВНЫЙ */
+/* Текст на карточке — ФИКСИРОВАННАЯ высота, карточка не прыгает */
 .card-text {
     line-height: 1.55;
     text-align: center;
-    /* 🔧 Высота зависит от высоты карточки */
-    flex: 0 0 auto;
-    min-height: 120px;
-    max-height: 42%;
+    height: 180px;                 /* 🔧 Всегда 180px */
+    flex-shrink: 0;                /* 🔧 Не сжимается */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -687,8 +685,7 @@ body {
     letter-spacing: 0.01em;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     font-family: 'Georgia', serif;
-    /* 🔧 АДАПТИВНЫЙ ШРИФТ: от 0.95rem до 1.2rem */
-    font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+    font-size: 1.2rem;
     padding: 12px 24px;
     color: #e2e8f0;
     box-sizing: border-box;
@@ -697,25 +694,22 @@ body {
     transition: opacity 0.25s ease;
 }
 
-/* Имя персонажа — адаптивное */
+/* Имя персонажа — ФИКСИРОВАННАЯ высота */
 .character-name {
-    padding: 12px 16px;
+    padding: 16px 20px;
     text-align: center;
-    /* 🔧 АДАПТИВНЫЙ ШРИФТ */
-    font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;
     background: rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     font-family: 'Courier New', monospace;
-    /* 🔧 Высота резиновая */
-    min-height: 40px;
-    max-height: 52px;
+    height: 52px;                  /* 🔧 Всегда 52px */
+    flex-shrink: 0;                /* 🔧 Не сжимается */
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
     transition: opacity 0.15s ease;
 }
 
@@ -1709,6 +1703,7 @@ body,
 @media (min-width: 1920px) {
     :root { font-size: 18px; }
     
+    /* Меню */
     #start-screen .menu-frame {
         max-width: 780px;
         padding: 4.5rem 5rem;
@@ -1720,6 +1715,7 @@ body,
     #start-screen .typewriter-text { font-size: 1.3rem; }
     #start-screen .corner-decor { width: 28px; height: 28px; }
     
+    /* Дисклеймер */
     .disclaimer-box {
         max-width: 960px;
         padding: 70px 90px;
@@ -1728,22 +1724,90 @@ body,
     .disclaimer-box p { font-size: 1.3rem; line-height: 1.85; }
     .click-to-continue { font-size: 1.15rem; padding: 20px 32px; }
     
-    .main-layout { max-width: 1200px; gap: 60px; }
+    /* 🔧 ИГРОВАЯ ЗОНА — увеличена */
+    .main-layout {
+        max-width: 1200px;
+        gap: 80px;
+    }
     
-    .card-stack { width: 420px; }
-    .timeline-container { width: 75px; height: 600px; }
-    .timeline-labels span { font-size: 12px; }
+    .card-stack {
+        width: 420px;
+        max-height: 630px;
+        max-width: 420px;
+    }
+    .card-text {
+        height: 230px;
+        font-size: 1.45rem;
+        padding: 18px 32px;
+    }
+    .character-name {
+        height: 64px;
+        font-size: 1.05rem;
+        padding: 18px 24px;
+    }
+    .card-date-below {
+        font-size: 1.2rem;
+        padding: 14px 0 0 0;
+    }
     
-    .modal-content { max-width: 920px; padding: 50px 60px; }
+    /* Плашки выбора крупнее */
+    .choice-label {
+        font-size: 1.05rem;
+        padding: 8px 18px;
+        top: 45px;
+    }
+    #choice-left { left: 25px; }
+    #choice-right { right: 25px; }
+    
+    /* Таймлайн крупнее */
+    .timeline-container {
+        width: 80px;
+        height: 630px;
+    }
+    .timeline-marker {
+        width: 22px;
+        height: 22px;
+    }
+    .timeline-labels span {
+        font-size: 12px;
+    }
+    
+    /* Модалки */
+    .modal-content {
+        max-width: 920px;
+        padding: 50px 60px;
+    }
     .modal-title { font-size: 2.6rem; }
+    .modal-body h3 { font-size: 1.6rem; }
     .modal-body p, .modal-body li { font-size: 1.2rem; }
     
-    .game-over-box { max-width: 720px; padding: 50px 45px; }
-    .bad-end-title, .final-title { font-size: 2.2rem; }
+    /* Концовки */
+    .game-over-box {
+        max-width: 760px;
+        padding: 55px 50px;
+    }
+    .bad-end-title, .final-title { font-size: 2.3rem; }
     .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 1.2rem; }
+    .stat-value-mini { font-size: 1.5rem; }
+    .accuracy-percent { font-size: 2.2rem; }
+    .restart-btn { font-size: 1.3rem; padding: 18px 32px; }
     
-    .player-panel { width: 360px; }
+    /* Плеер */
+    .music-player { top: 25px; right: 25px; }
+    .rules-icon { top: 88px; right: 25px; }
+    .player-icon, .rules-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 1.6rem;
+    }
+    .player-panel {
+        width: 360px;
+        top: 64px;
+        padding: 24px 28px;
+    }
     .track-name { font-size: 1.2rem; }
+    .player-panel-title { font-size: 0.85rem; }
+    .track-arrow { font-size: 1rem; padding: 6px 12px; }
 }
 
 /* ====== КРУПНЫЕ ПЛАНШЕТЫ (1024–1366px) — чуть растягиваем ====== */
@@ -1917,40 +1981,63 @@ body,
     .track-name { font-size: 0.9rem; }
 }
 
-/* ====== МАЛЕНЬКИЕ ТЕЛЕФОНЫ (≤480px) ====== */
+/* ---------- МАЛЕНЬКИЕ ЭКРАНЫ (≤480px) ---------- */
 @media (max-width: 480px) {
-    #start-screen .menu-frame { padding: 1.8rem 1.3rem; }
-    #start-screen .title { font-size: 1.75rem; }
-    #start-screen .btn { font-size: 0.9rem; padding: 11px 18px; }
-    #start-screen .typewriter-block { height: 80px; padding: 0.8rem 1rem; }
-    #start-screen .typewriter-text { font-size: 0.82rem; }
+    /* 🔧 Карточка уменьшается через aspect-ratio + max-height */
+    .card-stack {
+        width: min(92vw, 320px);
+        max-width: min(92vw, 320px);
+        max-height: 58vh;
+    }
     
-    .disclaimer-box { padding: 18px 14px; }
-    .disclaimer-box h2 { font-size: 1rem; }
-    .disclaimer-box p { font-size: 0.78rem; }
+    /* Пропорционально уменьшаем внутренности */
+    .card-text {
+        height: 30%;               /* 🔧 Процент от карточки */
+        min-height: 90px;
+        max-height: 140px;
+        font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+        padding: 8px 14px;
+    }
+    .character-name {
+        height: 42px;
+        font-size: clamp(0.58rem, 2vw, 0.72rem);
+        padding: 10px 12px;
+    }
+    .card-date-below {
+        font-size: 0.75rem;
+        padding: 8px 0 0 0;
+        letter-spacing: 2px;
+    }
     
-    .card-stack { width: min(90vw, 300px); }
-    .card-text { font-size: clamp(0.78rem, 2.8vw, 0.92rem); padding: 8px 14px; min-height: 100px; }
-    .character-name { font-size: clamp(0.55rem, 1.8vw, 0.68rem); padding: 8px 10px; min-height: 34px; }
-    .card-date-below { font-size: 0.72rem; }
+    /* Плашки выбора компактнее */
+    .choice-label {
+        font-size: 0.65rem;
+        padding: 4px 9px;
+        top: 12px;
+    }
+    #choice-left { left: 8px; }
+    #choice-right { right: 8px; }
     
-    .choice-label { font-size: 0.65rem; padding: 4px 8px; top: 14px; }
-    #choice-left  { left: 6px; }
-    #choice-right { right: 6px; }
+    /* Модалки и концовки */
+    .disclaimer-box,
+    .game-over-box,
+    .modal-content {
+        padding: 22px 16px;
+        width: 94%;
+    }
     
-    .game-over-box { padding: 18px 14px; }
-    .bad-end-title, .final-title { font-size: 1.05rem; letter-spacing: 1.5px; }
-    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 0.8rem; }
-    .final-stats-mini { padding: 8px; gap: 2px; }
-    .stat-icon { font-size: 1rem; }
-    .stat-value-mini { font-size: 0.95rem; }
-    .stat-label-mini { font-size: 0.55rem; }
-    .accuracy-percent { font-size: 1.25rem; }
+    .click-to-continue {
+        font-size: 0.72rem;
+        padding: 12px 14px;
+    }
     
-    .player-panel { width: min(240px, 94vw); }
-    .music-player { top: 6px; right: 6px; }
-    .rules-icon { top: 52px; right: 6px; }
-    .player-icon, .rules-icon { width: 38px; height: 38px; font-size: 1.1rem; }
+    .game-over-box {
+        max-height: 94vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .bad-end-title, .final-title { font-size: 1.1rem; }
+    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 0.82rem; }
 }
 
 /* ====== ОЧЕНЬ МАЛЕНЬКИЕ (≤360px — iPhone 5/SE/4) ====== */
@@ -2018,4 +2105,62 @@ body,
     .track-name { font-size: 0.78rem; }
     .player-panel-title { font-size: 0.6rem; }
     .track-arrow { font-size: 0.75rem; padding: 4px 8px; }
+    /* ---------- МАЛЕНЬКИЕ ЭКРАНЫ (≤480px) ---------- */
+@media (max-width: 480px) {
+    /* 🔧 Карточка уменьшается через aspect-ratio + max-height */
+    .card-stack {
+        width: min(92vw, 320px);
+        max-width: min(92vw, 320px);
+        max-height: 58vh;
+    }
+    
+    /* Пропорционально уменьшаем внутренности */
+    .card-text {
+        height: 30%;               /* 🔧 Процент от карточки */
+        min-height: 90px;
+        max-height: 140px;
+        font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+        padding: 8px 14px;
+    }
+    .character-name {
+        height: 42px;
+        font-size: clamp(0.58rem, 2vw, 0.72rem);
+        padding: 10px 12px;
+    }
+    .card-date-below {
+        font-size: 0.75rem;
+        padding: 8px 0 0 0;
+        letter-spacing: 2px;
+    }
+    
+    /* Плашки выбора компактнее */
+    .choice-label {
+        font-size: 0.65rem;
+        padding: 4px 9px;
+        top: 12px;
+    }
+    #choice-left { left: 8px; }
+    #choice-right { right: 8px; }
+    
+    /* Модалки и концовки */
+    .disclaimer-box,
+    .game-over-box,
+    .modal-content {
+        padding: 22px 16px;
+        width: 94%;
+    }
+    
+    .click-to-continue {
+        font-size: 0.72rem;
+        padding: 12px 14px;
+    }
+    
+    .game-over-box {
+        max-height: 94vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .bad-end-title, .final-title { font-size: 1.1rem; }
+    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 0.82rem; }
+}
 }
