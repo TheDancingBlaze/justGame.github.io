@@ -1671,26 +1671,246 @@ body,
    12. АДАПТИВНОСТЬ (от больших экранов к малым)
    ========================================================================== */
 
-/* ---------- ПЛАНШЕТЫ И НЕБОЛЬШИЕ ЭКРАНЫ (≤768px) ---------- */
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: БОЛЬШИЕ ЭКРАНЫ (≥1920px) — 24", 23", 22"
+   ========================================================================== */
+@media (min-width: 1920px) {
+    .main-layout {
+        max-width: 1200px;
+        gap: 80px;
+    }
 
-@media (max-width: 768px) {
-    /* Основной макет — вертикальный */
+    .game-container {
+        max-width: 520px;
+    }
+
+    .card-stack {
+        width: 420px;
+        height: 620px;
+    }
+
+    .card-text {
+        font-size: 1.45rem;
+        height: 220px;
+        padding: 16px 32px;
+    }
+
+    .character-name {
+        font-size: 1rem;
+        height: 60px;
+    }
+
+    .card-date-below {
+        font-size: 1.2rem;
+    }
+
+    .timeline-container {
+        width: 80px;
+        height: 600px;
+    }
+
+    .timeline-labels span {
+        font-size: 12px;
+    }
+
+    /* Увеличиваем модалки */
+    .modal-content {
+        max-width: 900px;
+        padding: 45px 55px;
+    }
+
+    .disclaimer-box {
+        max-width: 960px;
+        padding: 60px 80px;
+    }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: КРУПНЫЕ ПЛАНШЕТЫ / МАЛЫЕ НОУТБУКИ (1024px–1366px)
+   Surface Pro, iPad Pro 12.9"
+   ========================================================================== */
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .main-layout {
+        max-width: 1000px;
+        gap: 60px;
+    }
+
+    .game-container {
+        max-width: 460px;
+    }
+
+    .card-stack {
+        width: 380px;
+        height: 560px;
+    }
+
+    .card-text {
+        font-size: 1.35rem;
+        height: 200px;
+    }
+
+    .character-name {
+        font-size: 0.95rem;
+        height: 56px;
+    }
+
+    .timeline-container {
+        width: 70px;
+        height: 540px;
+    }
+
+    .disclaimer-box {
+        max-width: 840px;
+        padding: 55px 70px;
+    }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: ПЛАНШЕТЫ 10" (768px–1024px)
+   iPad, Galaxy Tab 10", Nexus 10
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Меню — уменьшаем чтобы не вылезало */
+    #start-screen .menu-frame {
+        padding: 2.4rem 2.6rem;
+        max-width: 500px;
+    }
+
+    #start-screen .title {
+        font-size: 2.6rem;
+    }
+
+    #start-screen .tagline {
+        font-size: 1rem;
+    }
+
+    #start-screen .btn {
+        font-size: 1.1rem;
+        padding: 13px 26px;
+    }
+
+    #start-screen .typewriter-block {
+        height: 85px;
+        padding: 1rem 1.4rem;
+    }
+
+    /* Дисклеймер — добавляем скролл */
+    .disclaimer-box {
+        max-width: 620px;
+        padding: 35px 40px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.95rem;
+        margin: 12px 0;
+    }
+
+    /* Карточки — уменьшаем */
+    .card-stack {
+        width: 280px;
+        height: 420px;
+    }
+
+    .card-text {
+        font-size: 1.05rem;
+        height: 150px;
+        padding: 10px 18px;
+    }
+
+    .character-name {
+        font-size: 0.8rem;
+        height: 46px;
+    }
+
+    .card-date-below {
+        font-size: 0.85rem;
+    }
+
+    /* Таймлайн компактнее */
+    .timeline-container {
+        width: 50px;
+        height: 400px;
+    }
+
+    /* Концовки */
+    .game-over-box {
+        max-width: 480px;
+        padding: 28px 24px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .bad-end-title,
+    .final-title {
+        font-size: 1.4rem;
+    }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: МАЛЕНЬКИЕ ПЛАНШЕТЫ 7" (600px–768px)
+   Nexus 7, Galaxy Tab 7"
+   ========================================================================== */
+@media (min-width: 600px) and (max-width: 768px) {
+    /* Меню */
+    #start-screen .menu-frame {
+        padding: 2rem 1.8rem;
+        max-width: 440px;
+    }
+
+    #start-screen .title {
+        font-size: 2.2rem;
+    }
+
+    #start-screen .btn {
+        font-size: 1rem;
+        padding: 12px 22px;
+    }
+
+    #start-screen .typewriter-block {
+        height: 80px;
+        padding: 0.9rem 1.2rem;
+    }
+
+    /* Дисклеймер */
+    .disclaimer-box {
+        max-width: 520px;
+        padding: 28px 30px;
+        max-height: 88vh;
+        overflow-y: auto;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Макет — вертикальный */
     .main-layout {
         flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        max-width: 100%;
+        gap: 12px;
     }
-    
-    /* Таймлайн становится горизонтальным над картой */
+
+    /* Таймлайн горизонтальный */
     .timeline-container {
         order: -1;
         width: 90%;
-        max-width: 340px;
-        height: 30px;
-        margin-bottom: 10px;
+        max-width: 320px;
+        height: 28px;
+        margin-bottom: 8px;
     }
-    
+
     .timeline-line {
         width: 100%;
         height: 2px;
@@ -1703,93 +1923,883 @@ body,
             rgba(184, 92, 26, 0.3)
         );
     }
-    
+
     .timeline-marker {
         top: 50% !important;
         left: auto !important;
         transform: translateY(-50%) !important;
         transition: left 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
-    
+
     .timeline-labels {
         flex-direction: row;
         left: 0;
         right: 0;
         top: auto;
-        bottom: -22px;
+        bottom: -20px;
         padding: 0;
         justify-content: space-between;
     }
-    
+
     .timeline-labels span {
-        font-size: 9px;
-        writing-mode: horizontal-tb;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        font-size: 8px;
     }
-    
-    /* Плашки выбора компактнее */
-    .choice-label {
+
+    /* Карточки */
+    .card-stack {
+        width: 260px;
+        height: 380px;
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+        height: 130px;
+        padding: 8px 14px;
+    }
+
+    .character-name {
         font-size: 0.75rem;
-        padding: 5px 10px;
-        top: 25px;
+        height: 42px;
     }
-    
-    #choice-left  { left: 10px; }
-    #choice-right { right: 10px; }
-    
-    /* UI элементы ближе к краям */
-    .music-player { top: 10px; right: 10px; }
-    .rules-icon   { top: 60px; right: 10px; }
-    .player-panel { width: min(280px, 90vw); right: -5px; }
-}
 
-
-/* ---------- МОБИЛЬНЫЕ УСТРОЙСТВА (≤600px) ---------- */
-
-@media (max-width: 600px) {
-    /* Меню */
-    #start-screen .menu-frame     { padding: 2.6rem 1.8rem; }
-    #start-screen .title          { font-size: 2.3rem; }
-    #start-screen .tagline        { font-size: 1rem; }
-    #start-screen .btn            { font-size: 1.1rem; padding: 13px 26px; }
-    #start-screen .typewriter-block { height: 105px; padding: 1.1rem 1.4rem; }
-    #start-screen .corner-decor   { width: 16px; height: 16px; }
-    
-    /* Дисклеймер */
-    .click-to-continue {
-        font-size: 0.75rem;
-        letter-spacing: 2px;
-        padding: 14px 16px;
-        white-space: normal;
-        line-height: 1.6;
-    }
-    
-    /* Модалки */
-    .modal-content   { padding: 25px 20px; max-height: 90vh; }
-    .modal-title     { font-size: 1.6rem; }
-    .modal-body h3   { font-size: 1.15rem; }
-}
-
-
-/* ---------- МАЛЕНЬКИЕ ЭКРАНЫ (≤480px) ---------- */
-
-@media (max-width: 480px) {
-    /* Карточка */
-    .card-stack      { width: 92vw; height: 60vh; min-height: 320px; }
-    .card-text       { font-size: 1.05rem; padding: 10px 16px; height: 140px; }
-    .card-date-below { font-size: 0.85rem; padding: 8px 0 0; }
-    .character-name  { height: 44px; font-size: 0.75rem; }
-    
-    /* Модалки и концовки */
-    .disclaimer-box,
-    .game-over-box,
-    .modal-content {
-        padding: 24px 18px;
-        width: 94%;
-    }
-    
-    .click-to-continue {
+    .card-date-below {
         font-size: 0.8rem;
+    }
+
+    /* Плашки выбора */
+    .choice-label {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        top: 20px;
+    }
+
+    /* Концовки */
+    .game-over-box {
+        max-width: 440px;
+        padding: 24px 20px;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: БОЛЬШИЕ ТЕЛЕФОНЫ (414px–600px)
+   iPhone Xr, Xs Max, 6+/7+/8+, Galaxy S8+
+   ========================================================================== */
+@media (min-width: 414px) and (max-width: 600px) {
+    /* Меню */
+    #start-screen .menu-frame {
+        padding: 2rem 1.5rem;
+        max-width: 380px;
+    }
+
+    #start-screen .title {
+        font-size: 2rem;
+    }
+
+    #start-screen .tagline {
+        font-size: 0.9rem;
+    }
+
+    #start-screen .btn {
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+
+    #start-screen .typewriter-block {
+        height: 90px;
+        padding: 0.8rem 1rem;
+    }
+
+    /* Дисклеймер — СКРОЛЛ! */
+    .disclaimer-screen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        align-items: flex-start;
+        padding: 20px 0;
+    }
+
+    .disclaimer-box {
+        max-width: 94%;
+        padding: 24px 20px;
+        margin: auto;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.85rem;
+        margin: 10px 0;
+        line-height: 1.55;
+    }
+
+    .click-to-continue {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        padding: 12px 14px;
+    }
+
+    /* Макет */
+    .main-layout {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    /* Таймлайн горизонтальный */
+    .timeline-container {
+        order: -1;
+        width: 85%;
+        max-width: 280px;
+        height: 24px;
+        margin-bottom: 6px;
+    }
+
+    .timeline-line {
+        width: 100%;
+        height: 2px;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        background: linear-gradient(to right,
+            rgba(184, 92, 26, 0.3),
+            var(--timeline-color),
+            rgba(184, 92, 26, 0.3)
+        );
+    }
+
+    .timeline-marker {
+        top: 50% !important;
+        left: auto !important;
+        transform: translateY(-50%) !important;
+        transition: left 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .timeline-labels {
+        flex-direction: row;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: -18px;
+        padding: 0;
+        justify-content: space-between;
+    }
+
+    .timeline-labels span {
+        font-size: 7px;
+    }
+
+    /* Карточки — уменьшаем */
+    .card-stack {
+        width: 78vw;
+        max-width: 320px;
+        height: 52vh;
+        min-height: 280px;
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+        height: 120px;
+        padding: 8px 14px;
+    }
+
+    .character-name {
+        font-size: 0.72rem;
+        height: 40px;
+    }
+
+    .card-date-below {
+        font-size: 0.78rem;
+    }
+
+    /* Плашки выбора — видно при свайпе */
+    .choice-label {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+        top: 15px;
+    }
+
+    #choice-left { left: 8px; }
+    #choice-right { right: 8px; }
+
+    /* Концовки — скролл */
+    .game-over-box {
+        max-width: 94%;
+        padding: 22px 18px;
+        max-height: 92vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .bad-end-title,
+    .final-title {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+
+    .consequence-text,
+    .bad-end-epilogue,
+    .final-epilogue,
+    .final-epilogue-sub {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .final-stats-mini {
+        padding: 8px;
+        margin: 10px 0;
+    }
+
+    .stat-value-mini {
+        font-size: 1.1rem;
+    }
+
+    .accuracy-percent {
+        font-size: 1.4rem;
+    }
+
+    .restart-btn {
         padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+
+    /* Плеер */
+    .music-player { top: 8px; right: 8px; }
+    .rules-icon { top: 56px; right: 8px; }
+    .player-panel { width: min(260px, 92vw); right: -2px; }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: СРЕДНИЕ ТЕЛЕФОНЫ (375px–413px)
+   iPhone X, 6, 6s, 7, 8
+   ========================================================================== */
+@media (min-width: 375px) and (max-width: 413px) {
+    /* Меню */
+    #start-screen .menu-frame {
+        padding: 1.8rem 1.3rem;
+        max-width: 340px;
+    }
+
+    #start-screen .title {
+        font-size: 1.8rem;
+    }
+
+    #start-screen .tagline {
+        font-size: 0.85rem;
+    }
+
+    #start-screen .btn {
+        font-size: 0.95rem;
+        padding: 11px 18px;
+    }
+
+    #start-screen .typewriter-block {
+        height: 85px;
+        padding: 0.7rem 0.9rem;
+    }
+
+    /* Дисклеймер */
+    .disclaimer-screen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        align-items: flex-start;
+        padding: 15px 0;
+    }
+
+    .disclaimer-box {
+        max-width: 95%;
+        padding: 20px 16px;
+        margin: auto;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.82rem;
+        margin: 8px 0;
+        line-height: 1.5;
+    }
+
+    .disclaimer-box hr {
+        margin: 16px auto;
+    }
+
+    .click-to-continue {
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        padding: 10px 12px;
+        margin-top: 20px;
+    }
+
+    /* Макет */
+    .main-layout {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    /* Таймлайн */
+    .timeline-container {
+        order: -1;
+        width: 85%;
+        max-width: 260px;
+        height: 22px;
+        margin-bottom: 5px;
+    }
+
+    .timeline-line {
+        width: 100%;
+        height: 2px;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        background: linear-gradient(to right,
+            rgba(184, 92, 26, 0.3),
+            var(--timeline-color),
+            rgba(184, 92, 26, 0.3)
+        );
+    }
+
+    .timeline-marker {
+        top: 50% !important;
+        left: auto !important;
+        transform: translateY(-50%) !important;
+        transition: left 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .timeline-labels {
+        flex-direction: row;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: -16px;
+        padding: 0;
+        justify-content: space-between;
+    }
+
+    .timeline-labels span {
+        font-size: 6.5px;
+    }
+
+    /* Карточки */
+    .card-stack {
+        width: 82vw;
+        max-width: 300px;
+        height: 48vh;
+        min-height: 260px;
+    }
+
+    .card-text {
+        font-size: 0.88rem;
+        height: 110px;
+        padding: 8px 12px;
+    }
+
+    .character-name {
+        font-size: 0.68rem;
+        height: 38px;
+    }
+
+    .card-date-below {
+        font-size: 0.72rem;
+    }
+
+    /* Плашки выбора */
+    .choice-label {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+        top: 12px;
+    }
+
+    #choice-left { left: 6px; }
+    #choice-right { right: 6px; }
+
+    /* Концовки */
+    .game-over-box {
+        max-width: 96%;
+        padding: 18px 14px;
+        max-height: 94vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .bad-end-title,
+    .final-title {
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 10px;
+    }
+
+    .consequence-text,
+    .bad-end-epilogue,
+    .final-epilogue p {
+        font-size: 0.82rem;
+        line-height: 1.45;
+    }
+
+    .choice-value {
+        font-size: 0.9rem;
+    }
+
+    .final-stats-mini {
+        padding: 6px;
+        margin: 8px 0;
+        gap: 4px;
+    }
+
+    .stat-icon {
+        font-size: 1rem;
+    }
+
+    .stat-value-mini {
+        font-size: 1rem;
+    }
+
+    .stat-label-mini {
+        font-size: 0.55rem;
+    }
+
+    .accuracy-percent {
+        font-size: 1.3rem;
+    }
+
+    .accuracy-title {
+        font-size: 0.6rem;
+    }
+
+    .restart-btn {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+    }
+
+    /* Плеер */
+    .music-player { top: 6px; right: 6px; }
+    .rules-icon { top: 52px; right: 6px; }
+    .player-icon, .rules-icon {
+        width: 38px;
+        height: 38px;
+    }
+    .player-panel { width: min(240px, 94vw); right: -2px; }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: ANDROID СРЕДНИЕ (360px–374px)
+   Galaxy S3, S7, S8, Note 2, Note 4
+   ========================================================================== */
+@media (min-width: 360px) and (max-width: 374px) {
+    /* Всё из блока 375px, но ещё компактнее */
+    #start-screen .menu-frame {
+        padding: 1.6rem 1.2rem;
+        max-width: 320px;
+    }
+
+    #start-screen .title {
+        font-size: 1.7rem;
+    }
+
+    #start-screen .btn {
+        font-size: 0.9rem;
+        padding: 10px 16px;
+    }
+
+    .disclaimer-box {
+        padding: 18px 14px;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 1rem;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.78rem;
+    }
+
+    /* Карточки */
+    .card-stack {
+        width: 84vw;
+        max-width: 285px;
+        height: 46vh;
+        min-height: 240px;
+    }
+
+    .card-text {
+        font-size: 0.82rem;
+        height: 100px;
+        padding: 6px 10px;
+    }
+
+    .character-name {
+        font-size: 0.62rem;
+        height: 34px;
+        letter-spacing: 0.1em;
+    }
+
+    .card-date-below {
+        font-size: 0.68rem;
+    }
+
+    .choice-label {
+        font-size: 0.6rem;
+        padding: 3px 7px;
+        top: 10px;
+    }
+
+    .game-over-box {
+        padding: 16px 12px;
+    }
+
+    .bad-end-title,
+    .final-title {
+        font-size: 1rem;
+    }
+
+    .consequence-text,
+    .bad-end-epilogue,
+    .final-epilogue p {
+        font-size: 0.78rem;
+    }
+}
+
+/* ==========================================================================
+   ДОПОЛНЕНИЕ: МАЛЕНЬКИЕ ТЕЛЕФОНЫ (≤359px)
+   iPhone 5, SE (1st gen), iPhone 4, Galaxy Y
+   ========================================================================== */
+@media (max-width: 359px) {
+    /* Меню — компактное, не вылезает */
+    #start-screen .menu-frame {
+        padding: 1.3rem 1rem;
+        max-width: 290px;
+        width: 95%;
+    }
+
+    #start-screen .title {
+        font-size: 1.45rem;
+    }
+
+    #start-screen .tagline {
+        font-size: 0.75rem;
+        max-width: 260px;
+    }
+
+    #start-screen .btn {
+        font-size: 0.82rem;
+        padding: 9px 14px;
+        letter-spacing: 1.5px;
+        max-width: 260px;
+    }
+
+    #start-screen .typewriter-block {
+        height: 70px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    #start-screen .typewriter-text {
+        font-size: 0.8rem;
+    }
+
+    #start-screen .candle-container {
+        display: none;
+    }
+
+    #start-screen .corner-decor {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Дисклеймер */
+    .disclaimer-screen {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+
+    .disclaimer-box {
+        max-width: 96%;
+        padding: 14px 12px;
+        margin: auto;
+        border-radius: 10px;
+    }
+
+    .disclaimer-box h2 {
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+
+    .disclaimer-box p {
+        font-size: 0.72rem;
+        margin: 6px 0;
+        line-height: 1.4;
+    }
+
+    .disclaimer-box hr {
+        margin: 10px auto;
+    }
+
+    .disclaimer-box::before,
+    .disclaimer-box::after,
+    .disclaimer-box .corner-bl,
+    .disclaimer-box .corner-br {
+        width: 12px;
+        height: 12px;
+    }
+
+    .click-to-continue {
+        font-size: 0.58rem;
+        letter-spacing: 0.5px;
+        padding: 8px 10px;
+        margin-top: 14px;
+    }
+
+    /* Макет */
+    .main-layout {
+        flex-direction: column;
+        gap: 6px;
+        padding: 5px;
+    }
+
+    /* Таймлайн */
+    .timeline-container {
+        order: -1;
+        width: 88%;
+        max-width: 240px;
+        height: 20px;
+        margin-bottom: 4px;
+    }
+
+    .timeline-line {
+        width: 100%;
+        height: 2px;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        background: linear-gradient(to right,
+            rgba(184, 92, 26, 0.3),
+            var(--timeline-color),
+            rgba(184, 92, 26, 0.3)
+        );
+    }
+
+    .timeline-marker {
+        top: 50% !important;
+        left: auto !important;
+        transform: translateY(-50%) !important;
+        transition: left 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
+        width: 12px;
+        height: 12px;
+    }
+
+    .timeline-labels {
+        flex-direction: row;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: -14px;
+        padding: 0;
+        justify-content: space-between;
+    }
+
+    .timeline-labels span {
+        font-size: 5.5px;
+    }
+
+    /* Карточки */
+    .card-stack {
+        width: 88vw;
+        max-width: 260px;
+        height: 42vh;
+        min-height: 220px;
+    }
+
+    .card-text {
+        font-size: 0.75rem;
+        height: 85px;
+        padding: 5px 8px;
+    }
+
+    .character-name {
+        font-size: 0.55rem;
+        height: 28px;
+        letter-spacing: 0.08em;
+        padding: 8px 10px;
+    }
+
+    .card-date-below {
+        font-size: 0.6rem;
+        padding: 6px 0 0;
+    }
+
+    .card-date-below::before,
+    .card-date-below::after {
+        letter-spacing: 1px;
+    }
+
+    /* Плашки выбора */
+    .choice-label {
+        font-size: 0.55rem;
+        padding: 3px 6px;
+        top: 8px;
+    }
+
+    #choice-left { left: 4px; }
+    #choice-right { right: 4px; }
+
+    /* Концовки */
+    .game-over-box {
+        max-width: 97%;
+        padding: 14px 10px;
+        max-height: 95vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 10px;
+    }
+
+    .game-over-box::before,
+    .game-over-box::after,
+    .game-over-box .corner-bl,
+    .game-over-box .corner-br {
+        width: 10px;
+        height: 10px;
+    }
+
+    .bad-end-title,
+    .final-title {
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .bad-end-header,
+    .final-header {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .bad-end-skull,
+    .final-crown {
+        font-size: 1rem;
+    }
+
+    .consequence-text,
+    .bad-end-epilogue,
+    .final-epilogue p {
+        font-size: 0.7rem;
+        line-height: 1.35;
+    }
+
+    .choice-label-text {
+        font-size: 0.55rem;
+    }
+
+    .choice-value {
+        font-size: 0.78rem;
+    }
+
+    .bad-end-choice,
+    .bad-end-consequence,
+    .final-dominant,
+    .accuracy-block {
+        padding: 8px 10px;
+        margin: 8px 0;
+    }
+
+    .final-stats-mini {
+        padding: 5px;
+        margin: 6px 0;
+        gap: 2px;
+    }
+
+    .stat-icon {
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+    }
+
+    .stat-value-mini {
+        font-size: 0.85rem;
+    }
+
+    .stat-label-mini {
+        font-size: 0.5rem;
+        letter-spacing: 1px;
+    }
+
+    .accuracy-percent {
+        font-size: 1.1rem;
+    }
+
+    .accuracy-title {
+        font-size: 0.5rem;
+    }
+
+    .accuracy-desc {
+        font-size: 0.65rem;
+    }
+
+    .restart-btn {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+        margin-top: 10px;
+        gap: 8px;
+    }
+
+    .restart-sword {
+        font-size: 0.8rem;
+    }
+
+    /* Плеер и правила */
+    .music-player { top: 4px; right: 4px; }
+    .rules-icon { top: 46px; right: 4px; }
+    .player-icon, .rules-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+    .music-note { font-size: 0.95rem; }
+    .player-panel { width: min(220px, 95vw); right: 0; padding: 14px 16px; }
+    .track-name { font-size: 0.85rem; }
+
+    /* Модалки */
+    .modal-content {
+        padding: 16px 12px;
+        width: 96%;
+        max-height: 92vh;
+        border-radius: 10px;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 14px;
+    }
+
+    .modal-body h3 {
+        font-size: 0.95rem;
+    }
+
+    .modal-body p,
+    .modal-body li {
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
+    .modal-close {
+        top: 8px;
+        right: 12px;
+        font-size: 1.6rem;
     }
 }
