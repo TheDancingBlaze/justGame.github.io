@@ -195,21 +195,26 @@ function preloadAllImages() {
 */
 function autoFitText(element, maxSize = CONFIG.TEXT_FIT.CARD_MAX, minSize = CONFIG.TEXT_FIT.CARD_MIN) {
     if (!element) return;
-    // Сохраняем фиксированную высоту контейнера
-    element.style.height = '180px';
+    
+    // 🔧 Высота НЕ фиксированная — берётся из CSS (flex: 0 0 auto)
     element.style.overflow = 'hidden';
-    let currentSize = maxSize;
+    
+    // 🔧 Адаптивный максимум: зависит от ширины карточки
+    const cardWidth = element.closest('.card-stack')?.offsetWidth || 320;
+    const adaptiveMax = Math.min(maxSize, Math.max(14, cardWidth / 20));
+    
+    let currentSize = adaptiveMax;
     element.style.fontSize = currentSize + 'px';
-    // Уменьшаем шрифт, пока текст не поместится
+    
     while (
         (element.scrollHeight > element.clientHeight ||
-        element.scrollWidth > element.clientWidth) &&
+         element.scrollWidth > element.clientWidth) &&
         currentSize > minSize
     ) {
         currentSize -= CONFIG.TEXT_FIT.STEP;
         element.style.fontSize = currentSize + 'px';
     }
-    // Многоточие для слишком длинного текста
+    
     if (currentSize <= minSize && element.scrollHeight > element.clientHeight) {
         element.style.display = '-webkit-box';
         element.style.webkitLineClamp = '6';
@@ -503,11 +508,23 @@ function handleDragMove(e) {
     const currentX = getEventX(e);
     let moveX = currentX - gameState.startX;
     
-    // Ограничиваем максимальное смещение
-    if (moveX > CONFIG.CARD.MAX_DRAG_DISTANCE) moveX = CONFIG.CARD.MAX_DRAG_DISTANCE;
-    if (moveX < -CONFIG.CARD.MAX_DRAG_DISTANCE) moveX = -CONFIG.CARD.MAX_DRAG_DISTANCE;
+    // 🔧 АДАПТИВНЫЙ МАКСИМУМ: зависит от ширины экрана
+    const screenWidth = window.innerWidth;
+    const cardWidth = DOM.card ? DOM.card.offsetWidth : 320;
+    // Карточка не должна вылетать больше чем на (ширина экрана - ширина карты) / 2 + запас
+    const adaptiveMax = Math.min(
+        CONFIG.CARD.MAX_DRAG_DISTANCE,
+        (screenWidth - cardWidth) / 2 + 20
+    );
     
-    const rotation = moveX / CONFIG.CARD.ROTATION_FACTOR;
+    // Ограничиваем максимальное смещение
+    if (moveX > adaptiveMax) moveX = adaptiveMax;
+    if (moveX < -adaptiveMax) moveX = -adaptiveMax;
+    
+    // 🔧 УМЕНЬШЕННЫЙ УГОЛ ПОВОРОТА (было /15, стало /25)
+    // Чем меньше делитель — тем сильнее поворот. 25 = мягкий наклон
+    const rotation = moveX / 25;
+    
     if (DOM.card) {
         DOM.card.style.transform = `translateX(${moveX}px) rotate(${rotation}deg)`;
     }
@@ -582,7 +599,8 @@ function handleDragEnd(e) {
         
         // Анимация улетающей карточки
         DOM.card.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
-        DOM.card.style.transform = `translateX(${direction * 600}px) rotate(${direction * 60}deg)`;
+        const flyDistance = Math.max(600, window.innerWidth);
+        DOM.card.style.transform = `translateX(${direction * flyDistance}px) rotate(${direction * 45}deg)`;
         DOM.card.style.opacity = '0';
         setTimeout(resetCard, CONFIG.CARD.ANIMATION_DURATION);
     } else if (DOM.card) {
@@ -1042,28 +1060,29 @@ function initializeGame() {
 // 15. ОБРАБОТЧИКИ СОБЫТИЙ
 // ==========================================================================
 
-// Кнопка старта игры (УСКОРЕНО: 800→UI.SCREEN_FADE)
+// Кнопка старта игры
 if (DOM.playBtn) {
     DOM.playBtn.addEventListener('click', () => {
         preloadAllImages();
+        
         // Анимация исчезновения меню
-        DOM.startScreen.style.transition = `opacity ${CONFIG.UI.SCREEN_FADE}ms ease, visibility ${CONFIG.UI.SCREEN_FADE}ms ease`;
+        DOM.startScreen.style.transition = 'opacity 0.8s ease, visibility 0.8s ease';
         DOM.startScreen.style.opacity = '0';
-
+        
         setTimeout(() => {
             DOM.startScreen.style.display = 'none';
             DOM.startScreen.style.visibility = 'hidden';
-
+            
             // Показываем дисклеймер с плавным появлением
             DOM.disclaimerScreen.style.display = 'flex';
             DOM.disclaimerScreen.style.visibility = 'visible';
             DOM.disclaimerScreen.style.opacity = '0';
-
+            
             setTimeout(() => {
-                DOM.disclaimerScreen.style.transition = `opacity ${CONFIG.UI.SCREEN_FADE}ms ease`;
+                DOM.disclaimerScreen.style.transition = 'opacity 0.8s ease';
                 DOM.disclaimerScreen.style.opacity = '1';
-            }, 30);
-        }, CONFIG.UI.SCREEN_FADE);
+            }, 50);
+        }, 800);
     });
 }
 
