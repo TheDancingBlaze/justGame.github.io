@@ -594,13 +594,15 @@ body {
     position: relative;
 }
 
-/* Стопка карт — СОХРАНЕНИЕ ПРОПОРЦИЙ + дата не вылетает */
+/* Стопка карт — ЖЁСТКИЕ ПРОПОРЦИИ 2:3, дата всегда видна */
 .card-stack {
     position: relative;
-    width: 320px;
-    aspect-ratio: 2 / 3;           /* 🔧 Всегда 2:3 */
-    max-height: 62vh;              /* 🔧 Не выше 62% экрана — дата влезает */
-    max-width: calc(62vh * 2 / 3); /* 🔧 Ширина подстраивается под высоту */
+    /* 🔧 Резиновая ширина, но не больше 88vw */
+    width: min(320px, 88vw);
+    /* 🔧 ЖЁСТКОЕ соотношение 2:3 — никогда не будет квадратом */
+    aspect-ratio: 2 / 3;
+    /* 🔧 Высота лимитирована — дата всегда помещается */
+    max-height: 60vh;
     margin: 0 auto;
     touch-action: none;
     -webkit-touch-callout: none;
@@ -672,12 +674,12 @@ body {
     transition: opacity 0.2s ease;
 }
 
-/* Текст на карточке — ФИКСИРОВАННАЯ высота, карточка не прыгает */
+/* Текст на карточке — адаптивный размер, карточка не прыгает */
 .card-text {
-    line-height: 1.55;
+    line-height: 1.5;
     text-align: center;
-    height: 180px;                 /* 🔧 Всегда 180px */
-    flex-shrink: 0;                /* 🔧 Не сжимается */
+    /* 🔧 Пропорциональная высота — 30% от карточки */
+    flex: 0 0 30%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -685,8 +687,9 @@ body {
     letter-spacing: 0.01em;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     font-family: 'Georgia', serif;
-    font-size: 1.2rem;
-    padding: 12px 24px;
+    /* 🔧 АДАПТИВНЫЙ ШРИФТ: min 0.72rem, идеальный 3.2vw, max 1.2rem */
+    font-size: clamp(0.72rem, 3.2vw, 1.2rem);
+    padding: 8px 16px;
     color: #e2e8f0;
     box-sizing: border-box;
     overflow: hidden;
@@ -694,37 +697,41 @@ body {
     transition: opacity 0.25s ease;
 }
 
-/* Имя персонажа — ФИКСИРОВАННАЯ высота */
+/* Имя персонажа — адаптивное */
 .character-name {
-    padding: 16px 20px;
+    padding: 8px 12px;
     text-align: center;
-    font-size: 0.85rem;
+    /* 🔧 АДАПТИВНЫЙ ШРИФТ */
+    font-size: clamp(0.6rem, 2vw, 0.85rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;
     background: rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     font-family: 'Courier New', monospace;
-    height: 52px;                  /* 🔧 Всегда 52px */
-    flex-shrink: 0;                /* 🔧 Не сжимается */
+    /* 🔧 Пропорциональная высота */
+    flex: 0 0 auto;
+    min-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
     transition: opacity 0.15s ease;
 }
 
-/* Дата под карточкой */
+/* Дата под карточкой — всегда видна */
 .card-date-below {
     text-align: center;
-    font-size: 1rem;
+    font-size: clamp(0.65rem, 2vw, 1rem);
     font-weight: bold;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     color: #ffffff;
     font-family: 'Courier New', monospace;
-    padding: 12px 0 0 0;
-    margin-top: 5px;
+    padding: 8px 0 0 0;
+    margin-top: 4px;
     text-transform: uppercase;
     position: relative;
+    flex-shrink: 0;
 }
 
 .card-date-below::before {
@@ -1699,115 +1706,133 @@ body,
 12. АДАПТИВНОСТЬ
 ========================================================================== */
 
-/* ====== ОГРОМНЫЕ ЭКРАНЫ (≥1920px) — УВЕЛИЧИВАЕМ ВСЁ ====== */
+/* ====== БОЛЬШИЕ ЭКРАНЫ (≥1920px) — УВЕЛИЧЕНО ВСЁ ====== */
 @media (min-width: 1920px) {
+    /* Базовый шрифт крупнее */
     :root { font-size: 18px; }
     
-    /* Меню */
+    /* ====== МЕНЮ ====== */
     #start-screen .menu-frame {
-        max-width: 780px;
+        max-width: 760px;
         padding: 4.5rem 5rem;
     }
-    #start-screen .title { font-size: 5rem; }
-    #start-screen .tagline { font-size: 1.5rem; max-width: 560px; }
-    #start-screen .btn { font-size: 1.5rem; padding: 20px 40px; max-width: 420px; }
+    #start-screen .title { font-size: 5.2rem; }
+    #start-screen .tagline { font-size: 1.5rem; max-width: 580px; }
+    #start-screen .btn { font-size: 1.5rem; padding: 22px 44px; max-width: 420px; }
     #start-screen .typewriter-block { height: 130px; padding: 1.8rem 2.4rem; }
-    #start-screen .typewriter-text { font-size: 1.3rem; }
-    #start-screen .corner-decor { width: 28px; height: 28px; }
+    #start-screen .typewriter-text { font-size: 1.35rem; }
+    #start-screen .corner-decor { width: 30px; height: 30px; border-width: 2px; }
     
-    /* Дисклеймер */
+    /* ====== ДИСКЛЕЙМЕР ====== */
     .disclaimer-box {
-        max-width: 960px;
-        padding: 70px 90px;
+        max-width: 1000px;
+        padding: 70px 95px;
     }
-    .disclaimer-box h2 { font-size: 2.5rem; letter-spacing: 8px; }
-    .disclaimer-box p { font-size: 1.3rem; line-height: 1.85; }
-    .click-to-continue { font-size: 1.15rem; padding: 20px 32px; }
+    .disclaimer-box h2 { font-size: 2.6rem; letter-spacing: 10px; }
+    .disclaimer-box p { font-size: 1.35rem; line-height: 1.9; }
+    .disclaimer-box::before, .disclaimer-box::after,
+    .disclaimer-box .corner-bl, .disclaimer-box .corner-br {
+        width: 34px;
+        height: 34px;
+        border-width: 2px;
+    }
+    .click-to-continue { font-size: 1.2rem; padding: 22px 36px; }
     
-    /* 🔧 ИГРОВАЯ ЗОНА — увеличена */
+    /* ====== ИГРОВАЯ ЗОНА ====== */
     .main-layout {
         max-width: 1200px;
         gap: 80px;
     }
     
-    .card-stack {
+    .card-stack { 
         width: 420px;
-        max-height: 630px;
-        max-width: 420px;
+        /* aspect-ratio: 2/3 работает автоматически */
     }
-    .card-text {
-        height: 230px;
-        font-size: 1.45rem;
-        padding: 18px 32px;
+    
+    .card-text { 
+        font-size: 1.6rem;
+        padding: 16px 32px;
     }
-    .character-name {
-        height: 64px;
-        font-size: 1.05rem;
-        padding: 18px 24px;
+    .character-name { 
+        font-size: 1.1rem; 
+        padding: 16px 24px;
+        min-height: 56px;
     }
-    .card-date-below {
-        font-size: 1.2rem;
+    .card-date-below { 
+        font-size: 1.25rem;
         padding: 14px 0 0 0;
+    }
+    
+    .card-image img {
+        border-radius: 24px;
     }
     
     /* Плашки выбора крупнее */
     .choice-label {
-        font-size: 1.05rem;
-        padding: 8px 18px;
-        top: 45px;
+        font-size: 1.1rem;
+        padding: 10px 22px;
+        top: 50px;
+        border-radius: 10px;
     }
-    #choice-left { left: 25px; }
-    #choice-right { right: 25px; }
+    #choice-left { left: 30px; }
+    #choice-right { right: 30px; }
     
     /* Таймлайн крупнее */
     .timeline-container {
-        width: 80px;
+        width: 85px;
         height: 630px;
     }
     .timeline-marker {
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
     }
     .timeline-labels span {
-        font-size: 12px;
+        font-size: 13px;
     }
     
-    /* Модалки */
+    /* ====== МОДАЛКИ ====== */
     .modal-content {
-        max-width: 920px;
-        padding: 50px 60px;
+        max-width: 960px;
+        padding: 55px 65px;
     }
-    .modal-title { font-size: 2.6rem; }
-    .modal-body h3 { font-size: 1.6rem; }
-    .modal-body p, .modal-body li { font-size: 1.2rem; }
+    .modal-title { font-size: 2.8rem; letter-spacing: 5px; }
+    .modal-body h3 { font-size: 1.7rem; }
+    .modal-body p, .modal-body li { font-size: 1.25rem; line-height: 1.8; }
     
-    /* Концовки */
+    /* ====== КОНЦОВКИ ====== */
     .game-over-box {
         max-width: 760px;
         padding: 55px 50px;
     }
-    .bad-end-title, .final-title { font-size: 2.3rem; }
-    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 1.2rem; }
-    .stat-value-mini { font-size: 1.5rem; }
-    .accuracy-percent { font-size: 2.2rem; }
-    .restart-btn { font-size: 1.3rem; padding: 18px 32px; }
+    .game-over-box::before, .game-over-box::after,
+    .game-over-box .corner-bl, .game-over-box .corner-br {
+        width: 26px;
+        height: 26px;
+        border-width: 2px;
+    }
+    .bad-end-title, .final-title { font-size: 2.4rem; letter-spacing: 6px; }
+    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 1.25rem; }
+    .stat-value-mini { font-size: 1.6rem; }
+    .accuracy-percent { font-size: 2.4rem; }
+    .restart-btn { font-size: 1.3rem; padding: 20px 36px; }
     
-    /* Плеер */
-    .music-player { top: 25px; right: 25px; }
-    .rules-icon { top: 88px; right: 25px; }
+    /* ====== ПЛЕЕР ====== */
+    .music-player { top: 25px; right: 30px; }
+    .rules-icon { top: 92px; right: 30px; }
     .player-icon, .rules-icon {
-        width: 54px;
-        height: 54px;
-        font-size: 1.6rem;
+        width: 58px;
+        height: 58px;
+        font-size: 1.7rem;
+        border-width: 2px;
     }
     .player-panel {
-        width: 360px;
-        top: 64px;
-        padding: 24px 28px;
+        width: 380px;
+        top: 70px;
+        padding: 26px 30px;
     }
-    .track-name { font-size: 1.2rem; }
-    .player-panel-title { font-size: 0.85rem; }
-    .track-arrow { font-size: 1rem; padding: 6px 12px; }
+    .track-name { font-size: 1.3rem; }
+    .player-panel-title { font-size: 0.85rem; letter-spacing: 4px; }
+    .track-arrow { font-size: 1.1rem; padding: 8px 14px; }
 }
 
 /* ====== КРУПНЫЕ ПЛАНШЕТЫ (1024–1366px) — чуть растягиваем ====== */
@@ -1983,42 +2008,35 @@ body,
 
 /* ---------- МАЛЕНЬКИЕ ЭКРАНЫ (≤480px) ---------- */
 @media (max-width: 480px) {
-    /* 🔧 Карточка уменьшается через aspect-ratio + max-height */
+    /* 🔧 Карточка уменьшается, но пропорции 2:3 сохраняются */
     .card-stack {
         width: min(92vw, 320px);
-        max-width: min(92vw, 320px);
-        max-height: 58vh;
+        max-height: 58vh; /* 🔧 Дата влезает */
     }
     
-    /* Пропорционально уменьшаем внутренности */
     .card-text {
-        height: 30%;               /* 🔧 Процент от карточки */
-        min-height: 90px;
-        max-height: 140px;
-        font-size: clamp(0.78rem, 2.8vw, 0.95rem);
+        font-size: clamp(0.75rem, 3.5vw, 1rem);
         padding: 8px 14px;
     }
     .character-name {
-        height: 42px;
-        font-size: clamp(0.58rem, 2vw, 0.72rem);
-        padding: 10px 12px;
+        font-size: clamp(0.6rem, 2.2vw, 0.78rem);
+        padding: 8px 10px;
+        min-height: 32px;
     }
     .card-date-below {
-        font-size: 0.75rem;
-        padding: 8px 0 0 0;
+        font-size: clamp(0.65rem, 2vw, 0.85rem);
+        padding: 6px 0 0 0;
         letter-spacing: 2px;
     }
     
-    /* Плашки выбора компактнее */
     .choice-label {
-        font-size: 0.65rem;
-        padding: 4px 9px;
-        top: 12px;
+        font-size: 0.68rem;
+        padding: 5px 10px;
+        top: 14px;
     }
-    #choice-left { left: 8px; }
-    #choice-right { right: 8px; }
+    #choice-left { left: 10px; }
+    #choice-right { right: 10px; }
     
-    /* Модалки и концовки */
     .disclaimer-box,
     .game-over-box,
     .modal-content {
@@ -2026,19 +2044,53 @@ body,
         width: 94%;
     }
     
-    .click-to-continue {
-        font-size: 0.72rem;
-        padding: 12px 14px;
-    }
-    
     .game-over-box {
-        max-height: 94vh;
+        max-height: 92vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
-    .bad-end-title, .final-title { font-size: 1.1rem; }
-    .consequence-text, .bad-end-epilogue, .final-epilogue p { font-size: 0.82rem; }
+    
+    .click-to-continue {
+        font-size: 0.75rem;
+        padding: 14px 16px;
+    }
 }
+
+/* ---------- ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (≤360px — iPhone 5/SE) ---------- */
+@media (max-width: 360px) {
+    .card-stack {
+        width: min(94vw, 280px);
+        max-height: 55vh;
+    }
+    
+    .card-text {
+        font-size: 0.78rem;
+        padding: 6px 10px;
+    }
+    .character-name {
+        font-size: 0.62rem;
+        padding: 6px 8px;
+        min-height: 28px;
+    }
+    .card-date-below {
+        font-size: 0.68rem;
+        padding: 5px 0 0 0;
+        letter-spacing: 1.5px;
+    }
+    .choice-label {
+        font-size: 0.6rem;
+        padding: 4px 8px;
+        top: 10px;
+    }
+    #choice-left { left: 6px; }
+    #choice-right { right: 6px; }
+    
+    .timeline-container {
+        max-width: 260px;
+        height: 24px;
+    }
+    .timeline-labels span { font-size: 7px; }
+}   
 
 /* ====== ОЧЕНЬ МАЛЕНЬКИЕ (≤360px — iPhone 5/SE/4) ====== */
 @media (max-width: 360px) {
