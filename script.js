@@ -473,14 +473,22 @@ function updateCardContent() {
 function resetCard() {
     gameState.currentQuestionIndex++;
     updateCardContent();
+    
     if (gameState.currentQuestionIndex < questions.length && DOM.card) {
+        // 🔧 ПЛАВНОЕ ПОЯВЛЕНИЕ: 
+        // 1. Начинаем уменьшенной и чуть выше
         DOM.card.style.transition = 'none';
-        DOM.card.style.transform = `translateX(0px) scale(0.9) rotate(0deg)`;
-        setTimeout(() => {
-            DOM.card.style.transition = `all ${CONFIG.CARD.RESET_DURATION}ms ease`;
-            DOM.card.style.opacity = '1';
-            DOM.card.style.transform = `translateX(0px) scale(1) rotate(0deg)`;
-        }, 30);
+        DOM.card.style.transform = 'translateX(0px) scale(0.85) translateY(20px)';
+        DOM.card.style.opacity = '0';
+        
+        // 2. На следующем кадре — анимация к нормальному состоянию
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                DOM.card.style.transition = 'all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                DOM.card.style.opacity = '1';
+                DOM.card.style.transform = 'translateX(0px) scale(1) translateY(0px)';
+            });
+        });
     }
 }
 
@@ -507,39 +515,44 @@ function handleDragMove(e) {
     
     if (!DOM.card) return;
     
-    // 🔧 РАСЧЁТ МАКСИМУМА: угол карточки не должен выходить за экран
+    // 🔧 РАСЧЁТ БЕЗОПАСНОЙ ЗОНЫ: углы карточки никогда не выходят за экран
     const screenWidth = window.innerWidth;
     const cardWidth = DOM.card.offsetWidth;
     const cardHeight = DOM.card.offsetHeight;
     
-    // Запас от края экрана (≈0.5 см = 19px)
-    const EDGE_PADDING = 20;
+    // Минимальный отступ от края = 0.5 см ≈ 19px, берём 22px с запасом
+    const EDGE_PADDING = 22;
     
     // Пробуем текущее смещение, считаем угол
-    let testMove = moveX;
-    if (testMove > CONFIG.CARD.MAX_DRAG_DISTANCE) testMove = CONFIG.CARD.MAX_DRAG_DISTANCE;
-    if (testMove < -CONFIG.CARD.MAX_DRAG_DISTANCE) testMove = -CONFIG.CARD.MAX_DRAG_DISTANCE;
+    let testMove = Math.max(-CONFIG.CARD.MAX_DRAG_DISTANCE, 
+                   Math.min(CONFIG.CARD.MAX_DRAG_DISTANCE, moveX));
     
     const testRotation = testMove / CONFIG.CARD.ROTATION_FACTOR;
     const rotationRad = Math.abs(testRotation) * Math.PI / 180;
     
-    // 🔧 На сколько пикселей угол "вылетает" по горизонтали из-за поворота
-    const cornerOverflow = Math.sin(rotationRad) * cardHeight / 2;
+    // 🔧 На сколько пикселей угол "вылетает" из-за поворота
+    const cornerOverflowX = Math.sin(rotationRad) * (cardHeight / 2);
     
-    // Максимальное смещение, при котором верхний угол ещё в кадре
-    const maxSafeMove = (screenWidth - cardWidth) / 2 - cornerOverflow - EDGE_PADDING;
+    // Максимальное безопасное смещение
+    const maxSafeMove = Math.max(
+        40, // Минимум чтобы хоть немного двигалось
+        (screenWidth - cardWidth) / 2 - cornerOverflowX - EDGE_PADDING
+    );
     
-    // Применяем ограничение (берём меньшее из двух)
-    const adaptiveMax = Math.min(CONFIG.CARD.MAX_DRAG_DISTANCE, Math.max(60, maxSafeMove));
-    
-    if (moveX > adaptiveMax) moveX = adaptiveMax;
-    if (moveX < -adaptiveMax) moveX = -adaptiveMax;
+    // Ограничиваем
+    if (moveX > maxSafeMove) moveX = maxSafeMove;
+    if (moveX < -maxSafeMove) moveX = -maxSafeMove;
     
     const rotation = moveX / CONFIG.CARD.ROTATION_FACTOR;
     
-    DOM.card.style.transform = `translateX(${moveX}px) rotate(${rotation}deg)`;
+    // 🔧 Используем requestAnimationFrame для плавности
+    requestAnimationFrame(() => {
+        if (DOM.card) {
+            DOM.card.style.transform = `translateX(${moveX}px) rotate(${rotation}deg)`;
+        }
+    });
     
-    // Показываем плашки выбора
+    // Плашки выбора
     if (moveX > 20) {
         if (DOM.rightLabel) DOM.rightLabel.style.opacity = Math.min(moveX / 100, 1);
         if (DOM.leftLabel) DOM.leftLabel.style.opacity = 0;
@@ -555,7 +568,6 @@ function handleDragMove(e) {
 function handleDragEnd(e) {
     if (!gameState.isDragging) return;
     gameState.isDragging = false;
-    
     const endX = getEventEndX(e);
     const finalMoveX = endX - gameState.startX;
     
@@ -563,16 +575,16 @@ function handleDragEnd(e) {
         const direction = finalMoveX > 0 ? 1 : -1;
         const currentData = questions[gameState.currentQuestionIndex];
         let isBadEnd = false;
-        let badEndReason = "";
-        let badChoiceText = "";
-        let badEndEpilogue = "";
+        let badEndReason = " ";
+        let badChoiceText = " ";
+        let badEndEpilogue = " ";
         
         if (direction === -1) {
             badChoiceText = currentData.left;
             if (currentData.badEndLeft) {
                 isBadEnd = true;
                 badEndReason = currentData.badEndLeftReason || "Ваше решение привело к катастрофическим последствиям для империи.";
-                badEndEpilogue = currentData.badEndLeftEpilogue || "";
+                badEndEpilogue = currentData.badEndLeftEpilogue || " ";
             }
             if (!isBadEnd) {
                 gameState.stats.epidemy += currentData.leftEff[0];
@@ -584,7 +596,7 @@ function handleDragEnd(e) {
             if (currentData.badEndRight) {
                 isBadEnd = true;
                 badEndReason = currentData.badEndRightReason || "Ваше решение привело к катастрофическим последствиям для империи.";
-                badEndEpilogue = currentData.badEndRightEpilogue || "";
+                badEndEpilogue = currentData.badEndRightEpilogue || " ";
             }
             if (!isBadEnd) {
                 gameState.stats.epidemy += currentData.rightEff[0];
@@ -607,16 +619,26 @@ function handleDragEnd(e) {
             return;
         }
         
-        // Анимация улетающей карточки
-        DOM.card.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
-        const flyDistance = Math.max(600, window.innerWidth);
-        DOM.card.style.transform = `translateX(${direction * 600}px) rotate(${direction * 60}deg)`;
-        DOM.card.style.opacity = '0';
+        // 🔧 ПЛАВНАЯ АНИМАЦИЯ УЛЁТА:
+        // 1. Уменьшаем поворот до 30° (было 60° — дёргалось)
+        // 2. Расстояние = ширина экрана (улетает за край гарантированно)
+        // 3. cubic-bezier для плавности
+        const flyDistance = window.innerWidth;
+        
+        DOM.card.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease';
+        
+        requestAnimationFrame(() => {
+            DOM.card.style.transform = `translateX(${direction * flyDistance}px) rotate(${direction * 30}deg)`;
+            DOM.card.style.opacity = '0';
+        });
+        
         setTimeout(resetCard, CONFIG.CARD.ANIMATION_DURATION);
     } else if (DOM.card) {
-        // Возврат карточки на место
-        DOM.card.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        DOM.card.style.transform = `translateX(0px) rotate(0deg)`;
+        // 🔧 Плавный возврат
+        DOM.card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        requestAnimationFrame(() => {
+            DOM.card.style.transform = 'translateX(0px) rotate(0deg)';
+        });
     }
     
     // Скрываем плашки выбора
@@ -1198,7 +1220,7 @@ document.addEventListener('keydown', (e) => {
         gameState.stats.epidemy = -50;
         gameState.stats.reputation = -70;
         gameState.stats.treasury = -30;
-        gameState.historicalAccuracy = { correct: 51, total: 51 };
+        gameState.historicalAccuracy = { correct: 34, total: 51 };
         gameState.currentQuestionIndex = questions.length;
         
         if (DOM.card) DOM.card.style.display = 'none';
